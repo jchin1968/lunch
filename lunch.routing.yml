@@ -1,0 +1,7 @@
+lunch.order:
+  path: '/lunch/order'
+  defaults:
+    _title: 'Lunch Order'
+    _form: '\Drupal\lunch\Form\LunchOrderForm'
+  requirements:
+    _permission: 'access content'
