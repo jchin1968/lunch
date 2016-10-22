@@ -4,7 +4,6 @@ namespace Drupal\lunch\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
 
 class LunchOrderForm extends FormBase {
 
@@ -19,11 +18,23 @@ class LunchOrderForm extends FormBase {
       '#required' => TRUE,
     ];
 
+    $start = new \DateTime();
+    $end = new \DateTime('+7 days');
+    $interval = new \DateInterval('P1D');
+    $range = new \DatePeriod($start, $interval, $end);
+
+    $date_options = [];
+    foreach($range as $date){
+      $formatted_date = $date->format('Y-m-d');
+      $date_options[$formatted_date] = $formatted_date;
+    }
+
     $form['delivery_date'] = [
-      '#type' => 'date',
+      '#type' => 'select',
       '#title' => $this->t('Delivery Date'),
+      '#options' => $date_options,
       '#required' => TRUE,
-     ];
+    ];
 
     $form['delivery_time'] = [
       '#type' => 'radios',
@@ -32,14 +43,14 @@ class LunchOrderForm extends FormBase {
       '#required' => TRUE,
     ];
 
-    $form['menu_selection'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Menu Selection'),
+    $form['menu_choices'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Menu Choices'),
       '#options' => [
-        1 => $this->t('Chicken Rice'),
-        2 => $this->t('Fried Noodles'),
-        3 => $this->t('Soup and Sandwich'),
-        4 => $this->t('Pizza'),
+        $this->t('Chicken Rice'),
+        $this->t('Fried Noodles'),
+        $this->t('Soup and Sandwich'),
+        $this->t('Pizza'),
       ],
       '#required' => TRUE,
     ];
@@ -59,6 +70,7 @@ class LunchOrderForm extends FormBase {
   }
 
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    drupal_set_message($this->t('Thank you for your order'), 'status');
+    $fullname = $form_state->getValue('fullname');
+    drupal_set_message($this->t('Thank you, @fullname, for your order', ['@fullname' => $fullname]), 'status');
   }
 }
