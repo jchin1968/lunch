@@ -19,7 +19,7 @@ class LunchOrderForm extends FormBase {
     ];
 
     $start = new \DateTime();
-    $end = new \DateTime('+7 days');
+    $end = new \DateTime('+10 days');
     $interval = new \DateInterval('P1D');
     $range = new \DatePeriod($start, $interval, $end);
 
